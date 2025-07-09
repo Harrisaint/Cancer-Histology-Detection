@@ -1,0 +1,21 @@
+# Ignore full BreaKHis dataset
+BreakHis_v1/
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+.venv/
+env/
+
+# Ignore model logs and checkpoints
+*.h5
+*.keras
+*.ckpt
+*.log
+
+# Ignore system & editor files
+.DS_Store
+.vscode/
+
+# Optional: Ignore large generated plots
+*.png
