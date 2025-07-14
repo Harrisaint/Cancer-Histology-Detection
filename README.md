@@ -1,191 +1,146 @@
-# 🧬 Cancer Histology Detection with MobileNetV2 + Streamlit
+# Conversation Monitoring Application
 
-A deep learning project for binary classification of breast cancer histology images (benign vs. malignant) using **MobileNetV2**, with a lightweight **Streamlit frontend** for image testing. Trained on the [BreaKHis](https://www.kaggle.com/datasets/ambarish/breakhis) dataset with **custom focal loss**, precision-recall tuning, and advanced metrics tracking.
+## 1. Project Overview
 
----
+The Conversation Monitoring application is a full-stack platform for tracking, analyzing, and annotating client conversations across industries such as healthcare and veterinary services. It provides a dashboard for high-level monitoring, detailed conversation views, collaborative comment threads, annotation tools, and performance metrics to help teams improve client interactions and outcomes.
 
-## 🔍 Project Overview
-
-- **Goal**: Classify histopathological images into benign or malignant classes.
-- **Model**: Transfer learning using `MobileNetV2`, fine-tuned with data augmentation.
-- **Loss**: Custom `FocalLoss` to handle class imbalance.
-- **Frontend**: Minimal Streamlit app to test model predictions on unseen images.
-- **Dataset**: BreaKHis v1 (not fully included due to size — see instructions below).
+### **Primary Features**
+- **Home Screen**: Dashboard showing all clients, categories (e.g., healthcare, veterinary), and summary statistics (e.g., total conversations, flagged items, performance trends).
+- **Conversations Screen**: View individual conversations, add threaded comments, annotate transcripts, and review performance metrics (e.g., sentiment, response time).
 
 ---
 
-## 📁 Repository Structure
+## 2. Tech Stack
 
-```bash
-.
-├── backend/
-│   ├── app.py                    # Streamlit frontend
-│   ├── model_with_finetuning_dataaugmentation.py  # Full training script
-│   ├── checkclassnames.py        # Class mapping helper
-│   ├── sanitycheck.py            # Dev debug tools
-│   └── breakhis_mobilenet_improved_model.keras  # Final trained model
-├── extract_holdout_set.py        # Helper to extract test set from BreaKHis
-├── holdout_test_set/             # Small sample for frontend testing (included)
-├── .gitignore
-└── README.md                     # This file
-```
+- **Frontend**: React, TailwindCSS
+- **Backend**: Node.js, Express, Sequelize
+- **Database**: PostgreSQL
+- **Dev Tools**: Docker, Vite, ESLint, Prettier
 
 ---
 
-## ⚙️ Getting Started
+## 3. Development Environment Setup
 
-### 🔧 1. Clone the Repository
+### 🔧 **Prerequisites**
+- **Node.js**: v18+ recommended
+- **PostgreSQL**: v13+ (local or Docker)
+- **(Optional) Docker**: For containerized development
 
-```bash
-git clone https://github.com/Harrisaint/Cancer-Histology-Detection.git
-cd Cancer-Histology-Detection
-```
-
----
-
-## 🧪 Option 1: Run Streamlit Frontend (Test-Only)
-
-This uses the **included `holdout_test_set/`** to try the model right away.
-
-### ✅ Requirements
-
-Install dependencies:
-
+### 📦 **Backend Setup**
 ```bash
 cd backend
-pip install -r requirements.txt  # Or manually: streamlit, tensorflow, pillow, numpy
+npm install
+# Set environment variables in .env (see .env.example)
+npx sequelize-cli db:migrate
+npm run dev
 ```
 
-### ▶️ Launch the app
-
+### 💻 **Frontend Setup**
 ```bash
-streamlit run app.py
+cd frontend
+npm install
+npm run dev
 ```
 
-You’ll get a web interface to pick and classify holdout histology images.
+---
+
+## 4. Running the Application
+
+- **Frontend** runs on [http://localhost:3000](http://localhost:3000)
+- **Backend** runs on [http://localhost:5000](http://localhost:5000)
+- The frontend is configured to proxy API requests to the backend (see `frontend/vite.config.js` or `package.json` proxy field).
+
+To run both simultaneously:
+- Start the backend (`npm run dev` in `backend/`)
+- Start the frontend (`npm run dev` in `frontend/`)
 
 ---
 
-## 🏋️ Option 2: Retrain Model with BreaKHis Dataset
+## 5. API Endpoints
 
-> The full BreaKHis dataset is **NOT included** here due to size limits.
+### **/api/clients**
+- **GET /api/clients**
+  - Description: Fetch all clients
+  - Output: List of client objects
 
-### 📦 Step 1: Download Dataset
+### **/api/comments**
+- **GET /api/comments/:interactionId**
+  - Description: Fetch all comments for a given interaction
+  - Input: `interactionId` (URL param)
+  - Output: List of comment objects
+- **POST /api/comments**
+  - Description: Add a new comment to an interaction
+  - Input: `{ interactionId, author, content, comment_type }`
+  - Output: Created comment object
 
-Download the full dataset (v1) from Kaggle:
-https://www.kaggle.com/datasets/ambarish/breakhis
+### **/api/interactions**
+- **GET /api/interactions**
+  - Description: Fetch all interactions
+  - Output: List of interaction objects
+- **GET /api/interactions/:id**
+  - Description: Fetch a single interaction by ID
+  - Input: `id` (URL param)
+  - Output: Interaction object
 
-Extract it to a folder named:
-
-```bash
-BreakHis_v1/
-```
-
-Place it **one level above** the project folder (i.e., `../BreakHis_v1/`).
-
----
-
-### 🧠 Step 2: Train the Model
-
-```bash
-cd backend
-python model_with_finetuning_dataaugmentation.py
-```
-
-The script will:
-- Perform data augmentation
-- Train MobileNetV2 with early stopping + learning rate decay
-- Evaluate performance
-- Save the model as: `breakhis_mobilenet_improved_model.keras`
-
----
-
-### 📦 Step 3 (Optional): Extract Holdout Set
-
-To extract a balanced test set:
-
-```bash
-python ../extract_holdout_set.py
-```
-
-This will create a `holdout_test_set/` directory used by the Streamlit app.
+### **/api/performance**
+- **GET /api/performance/:clientId**
+  - Description: Fetch performance metrics for a client
+  - Input: `clientId` (URL param)
+  - Output: Performance metrics object
 
 ---
 
-## 📊 Results Summary
+## 6. Data Models / Schemas
 
-| Metric              | Value (Optimal Threshold) |
-|---------------------|---------------------------|
-| Accuracy            | 94%                        |
-| Precision (Malignant) | 92%                     |
-| Recall (Benign)     | 80%                        |
-| F1 Score            | 0.89 – 0.96                |
-| AUC (Val)           | 0.995+                     |
+### **Comment**
+- `id`: integer, primary key
+- `interactionId`: integer, foreign key
+- `author`: string
+- `content`: text
+- `comment_type`: enum ('general', 'flag', 'note')
+- `exported`: boolean
+- `created_at`: timestamp
 
----
+### **Client**
+- `id`: integer, primary key
+- `name`: string
+- `category`: enum ('healthcare', 'veterinary', ...)
+- `created_at`: timestamp
 
-## 🧠 Custom Loss Function
+### **Interaction**
+- `id`: integer, primary key
+- `clientId`: integer, foreign key
+- `transcript`: text
+- `priority`: enum ('low', 'medium', 'high')
+- `created_at`: timestamp
 
-We use `FocalLoss` to improve sensitivity for the minority class (benign):
-
-```python
-@register_keras_serializable()
-class FocalLoss(tf.keras.losses.Loss):
-    ...
-```
-
-This helps shift the decision boundary in highly imbalanced datasets.
-
----
-
-## 📁 .gitignore (Important!)
-
-The repository uses a `.gitignore` file to:
-
-- Exclude the full BreaKHis dataset
-- Avoid committing model checkpoints, `.h5`, `.keras`, `.log`, etc.
-- Skip virtual environments
+### **Enums**
+- `priority`: 'low', 'medium', 'high'
+- `comment_type`: 'general', 'flag', 'note'
+- `category`: 'healthcare', 'veterinary', ...
 
 ---
 
-## 📌 Credits
+## 7. Troubleshooting
 
-- BreaKHis Dataset © [Kaggle](https://www.kaggle.com/datasets/ambarish/breakhis)
-- Streamlit, TensorFlow, and Keras open-source tools
+- **Database not running**: Ensure PostgreSQL is running locally or via Docker.
+- **CORS errors**: Check proxy settings in frontend config.
+- **Migrations failing**: Check your `.env` DB credentials and run:
+  ```bash
+  npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate
+  ```
+- **Resetting your local DB**: Use the command above to drop, create, and migrate the database.
 
 ---
 
-## 📬 Contact
+## 8. Contributing
 
-Made by [Harrisaint](https://github.com/Harrisaint)
+- **Branching strategy**: Use `main` for production, `dev` for integration, and feature branches (`feature/xyz`) for new work.
+- **Linting/formatting**: Run `npm run lint` and `npm run format` before submitting a PR.
+- **Pull Requests**: Submit PRs to the `dev` branch. Include a clear description and reference any related issues.
+- **Code reviews**: At least one approval required before merging.
+- **Contact**: For questions or approvals, contact the project maintainer or lead developer listed in `CONTRIBUTORS.md`.
 
 ---
 
-## 🚀 React Frontend Setup (For UI Development)
-
-If you want to develop or preview the new React-based frontend (without backend integration):
-
-1. **Create the React app:**
-
-```bash
-npx create-react-app cancer-histology-frontend
-cd cancer-histology-frontend
-```
-
-2. **Install Material-UI (MUI):**
-
-```bash
-npm install @mui/material @emotion/react @emotion/styled
-```
-
-3. **Replace the contents of the `src/` folder** with the provided structure and code (see project documentation or ask the maintainer for the latest files).
-
-4. **Start the development server:**
-
-```bash
-npm start
-```
-
-The app will be available at [http://localhost:3000](http://localhost:3000).
-
-> **Note:** The prediction feature will show a placeholder error until the backend is connected.
+**Happy coding!**
