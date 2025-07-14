@@ -158,3 +158,34 @@ The repository uses a `.gitignore` file to:
 ## 📬 Contact
 
 Made by [Harrisaint](https://github.com/Harrisaint)
+
+---
+
+## 🚀 React Frontend Setup (For UI Development)
+
+If you want to develop or preview the new React-based frontend (without backend integration):
+
+1. **Create the React app:**
+
+```bash
+npx create-react-app cancer-histology-frontend
+cd cancer-histology-frontend
+```
+
+2. **Install Material-UI (MUI):**
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled
+```
+
+3. **Replace the contents of the `src/` folder** with the provided structure and code (see project documentation or ask the maintainer for the latest files).
+
+4. **Start the development server:**
+
+```bash
+npm start
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+> **Note:** The prediction feature will show a placeholder error until the backend is connected.
