@@ -1,146 +1,167 @@
-# Conversation Monitoring Application
+# Cancer Histology Detection Platform
 
-## 1. Project Overview
-
-The Conversation Monitoring application is a full-stack platform for tracking, analyzing, and annotating client conversations across industries such as healthcare and veterinary services. It provides a dashboard for high-level monitoring, detailed conversation views, collaborative comment threads, annotation tools, and performance metrics to help teams improve client interactions and outcomes.
-
-### **Primary Features**
-- **Home Screen**: Dashboard showing all clients, categories (e.g., healthcare, veterinary), and summary statistics (e.g., total conversations, flagged items, performance trends).
-- **Conversations Screen**: View individual conversations, add threaded comments, annotate transcripts, and review performance metrics (e.g., sentiment, response time).
+## Overview
+A full-stack application for classifying breast cancer histology images as benign or malignant using deep learning. The platform features a modern, playful React frontend and a Python backend (Streamlit or Flask/FastAPI recommended) for real-time image analysis. Target users include medical researchers, students, and developers interested in medical AI and histopathology.
 
 ---
 
-## 2. Tech Stack
-
-- **Frontend**: React, TailwindCSS
-- **Backend**: Node.js, Express, Sequelize
-- **Database**: PostgreSQL
-- **Dev Tools**: Docker, Vite, ESLint, Prettier
+## Table of Contents
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Architecture Overview](#architecture-overview)
+- [Getting Started (Local Setup)](#getting-started-local-setup)
+- [Available Scripts/Commands](#available-scriptscommands)
+- [API Overview](#api-overview)
+- [Database Setup](#database-setup)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [Known Issues or TODOs](#known-issues-or-todos)
+- [License](#license)
+- [Acknowledgments / Credits](#acknowledgments--credits)
 
 ---
 
-## 3. Development Environment Setup
+## Tech Stack
+- **Frontend:** React 19, Material UI v5, Emotion, Poppins font
+- **Backend:** Python (Streamlit for demo, Flask/FastAPI for API integration)
+- **Dev Tools:** Vite, ESLint, Prettier, Docker (optional)
+- **Database:** None required for basic image classification (add if extending for user/data storage)
 
-### 🔧 **Prerequisites**
-- **Node.js**: v18+ recommended
-- **PostgreSQL**: v13+ (local or Docker)
-- **(Optional) Docker**: For containerized development
+---
 
-### 📦 **Backend Setup**
-```bash
-cd backend
-npm install
-# Set environment variables in .env (see .env.example)
-npx sequelize-cli db:migrate
-npm run dev
+## Features
+- **Home Screen:** Modern hero section, project overview, and call to action
+- **Image Analysis:**
+  - Upload your own histology image or select a sample
+  - Real-time prediction via backend API
+  - Displays predicted label, confidence, and (for samples) mock results
+- **Dark/Light Mode:** Toggle for accessibility and style
+- **About Page:** Project info and disclaimers
+- **Responsive Design:** Works on desktop and mobile
+
+---
+
+## Architecture Overview
+- **Frontend:**
+  - React app (in `cancer-histology-frontend/`)
+  - Handles UI, image upload, and API requests
+- **Backend:**
+  - Python app (Streamlit for demo, or Flask/FastAPI for `/api/predict` endpoint)
+  - Receives image uploads, runs model inference, returns JSON
+- **Interaction:**
+  - Frontend POSTs image to `/api/predict`
+  - Backend returns `{ predictedLabel, confidence, actualLabel (optional) }`
+
+**Folder Structure:**
+```
+Cancer-Histology-Detection/
+  backend/           # Python backend (model, API, Streamlit)
+  cancer-histology-frontend/  # React frontend
+  holdout_test_set/  # (optional) Sample images for testing
+  README.md          # This file
 ```
 
-### 💻 **Frontend Setup**
+---
+
+## Getting Started (Local Setup)
+
+### Prerequisites
+- Node.js v18+
+- Python 3.8+
+- (Optional) Docker
+
+### Backend Setup
+1. Install Python dependencies (see backend/README or requirements.txt)
+2. (If using Flask/FastAPI) Set up `/api/predict` endpoint to accept image uploads and return predictions
+3. (If using Streamlit) Run `streamlit run backend/app.py` for demo UI
+
+### Frontend Setup
 ```bash
-cd frontend
+cd cancer-histology-frontend
 npm install
-npm run dev
+npm start
 ```
 
----
-
-## 4. Running the Application
-
-- **Frontend** runs on [http://localhost:3000](http://localhost:3000)
-- **Backend** runs on [http://localhost:5000](http://localhost:5000)
-- The frontend is configured to proxy API requests to the backend (see `frontend/vite.config.js` or `package.json` proxy field).
-
-To run both simultaneously:
-- Start the backend (`npm run dev` in `backend/`)
-- Start the frontend (`npm run dev` in `frontend/`)
+### Environment Variables
+- For backend API, set any required model or path variables in `.env` (see backend docs)
+- For frontend, no .env needed unless proxying or customizing API URL
 
 ---
 
-## 5. API Endpoints
+## Available Scripts/Commands
 
-### **/api/clients**
-- **GET /api/clients**
-  - Description: Fetch all clients
-  - Output: List of client objects
+### Frontend
+- `npm start` — Start React dev server
+- `npm run build` — Build for production
+- `npm run lint` — Lint code
+- `npm run format` — Format code
 
-### **/api/comments**
-- **GET /api/comments/:interactionId**
-  - Description: Fetch all comments for a given interaction
-  - Input: `interactionId` (URL param)
-  - Output: List of comment objects
-- **POST /api/comments**
-  - Description: Add a new comment to an interaction
-  - Input: `{ interactionId, author, content, comment_type }`
-  - Output: Created comment object
-
-### **/api/interactions**
-- **GET /api/interactions**
-  - Description: Fetch all interactions
-  - Output: List of interaction objects
-- **GET /api/interactions/:id**
-  - Description: Fetch a single interaction by ID
-  - Input: `id` (URL param)
-  - Output: Interaction object
-
-### **/api/performance**
-- **GET /api/performance/:clientId**
-  - Description: Fetch performance metrics for a client
-  - Input: `clientId` (URL param)
-  - Output: Performance metrics object
+### Backend (example for Flask/FastAPI)
+- `python app.py` or `uvicorn app:app --reload` — Start backend API
+- `streamlit run app.py` — Start Streamlit demo
 
 ---
 
-## 6. Data Models / Schemas
+## API Overview
 
-### **Comment**
-- `id`: integer, primary key
-- `interactionId`: integer, foreign key
-- `author`: string
-- `content`: text
-- `comment_type`: enum ('general', 'flag', 'note')
-- `exported`: boolean
-- `created_at`: timestamp
-
-### **Client**
-- `id`: integer, primary key
-- `name`: string
-- `category`: enum ('healthcare', 'veterinary', ...)
-- `created_at`: timestamp
-
-### **Interaction**
-- `id`: integer, primary key
-- `clientId`: integer, foreign key
-- `transcript`: text
-- `priority`: enum ('low', 'medium', 'high')
-- `created_at`: timestamp
-
-### **Enums**
-- `priority`: 'low', 'medium', 'high'
-- `comment_type`: 'general', 'flag', 'note'
-- `category`: 'healthcare', 'veterinary', ...
-
----
-
-## 7. Troubleshooting
-
-- **Database not running**: Ensure PostgreSQL is running locally or via Docker.
-- **CORS errors**: Check proxy settings in frontend config.
-- **Migrations failing**: Check your `.env` DB credentials and run:
-  ```bash
-  npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate
+### **POST /api/predict**
+- **Description:** Predicts label for uploaded histology image
+- **Input:** FormData with `image` field (file)
+- **Output:**
+  ```json
+  {
+    "predictedLabel": "benign" | "malignant",
+    "confidence": 0.92,
+    "actualLabel": "benign" // optional
+  }
   ```
-- **Resetting your local DB**: Use the command above to drop, create, and migrate the database.
 
 ---
 
-## 8. Contributing
-
-- **Branching strategy**: Use `main` for production, `dev` for integration, and feature branches (`feature/xyz`) for new work.
-- **Linting/formatting**: Run `npm run lint` and `npm run format` before submitting a PR.
-- **Pull Requests**: Submit PRs to the `dev` branch. Include a clear description and reference any related issues.
-- **Code reviews**: At least one approval required before merging.
-- **Contact**: For questions or approvals, contact the project maintainer or lead developer listed in `CONTRIBUTORS.md`.
+## Database Setup
+- **No database required** for basic image classification.
+- If extending for user management or data storage, add PostgreSQL/MySQL and document migrations here.
 
 ---
 
-**Happy coding!**
+## Testing
+- **Frontend:** Add tests with Jest/React Testing Library as needed
+- **Backend:** Add tests with Pytest or unittest for API/model
+- No tests included by default
+
+---
+
+## Deployment
+- **Frontend:** Deploy to Vercel, Netlify, or similar static hosting
+- **Backend:** Deploy to Heroku, AWS, GCP, or similar (ensure `/api/predict` is accessible)
+- **Docker:** Add Dockerfiles for containerized deployment if needed
+
+---
+
+## Contributing
+- Fork the repo and create a feature branch (`feature/your-feature`)
+- Run `npm run lint` and `npm run format` before PRs
+- Submit PRs to `main` with clear descriptions
+- For questions, open an issue or contact the maintainer
+
+---
+
+## Known Issues or TODOs
+- No authentication or user management
+- No persistent database (unless extended)
+- Model file and large datasets not included in repo
+- Add more tests and error handling
+
+---
+
+## License
+MIT License
+
+---
+
+## Acknowledgments / Credits
+- [BreaKHis Dataset](https://www.kaggle.com/datasets/ambarish/breakhis)
+- Streamlit, TensorFlow, Keras, React, Material UI, and open-source contributors
+- Inspired by medical AI research and the open-source community
