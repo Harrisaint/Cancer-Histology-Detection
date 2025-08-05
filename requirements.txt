@@ -1,5 +1,5 @@
 fastapi
 pillow
 numpy
-tensorflow==2.19.0
+tensorflow
 uvicorn[standard]
