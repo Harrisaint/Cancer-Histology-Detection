@@ -1,34 +1,43 @@
-import { 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  Typography, 
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
   Box,
   Card,
   CardContent,
   Chip,
-  Button
+  Button,
+  CircularProgress
 } from '@mui/material';
 import { Image, Science, UploadFile } from '@mui/icons-material';
-import { useRef, useState } from 'react';
-
-// Mock data - in real app, this would come from the holdout_test_set directory
-const mockImageOptions = [
-  { filename: "benign_sample_1.jpg", actualLabel: "benign", path: "/sample-images/benign_1.jpg" },
-  { filename: "benign_sample_2.jpg", actualLabel: "benign", path: "/sample-images/benign_2.jpg" },
-  { filename: "malignant_sample_1.jpg", actualLabel: "malignant", path: "/sample-images/malignant_1.jpg" },
-  { filename: "malignant_sample_2.jpg", actualLabel: "malignant", path: "/sample-images/malignant_2.jpg" },
-  { filename: "benign_sample_3.jpg", actualLabel: "benign", path: "/sample-images/benign_3.jpg" },
-  { filename: "malignant_sample_3.jpg", actualLabel: "malignant", path: "/sample-images/malignant_3.jpg" },
-];
+import { useRef, useState, useEffect } from 'react';
 
 export default function ImageSelector({ selectedImage, onImageSelect }) {
-  const getLabelColor = (label) => {
-    return label === 'benign' ? '#4CAF50' : '#F44336';
-  };
   const fileInput = useRef();
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [holdoutImages, setHoldoutImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getLabelColor = (label) => {
+    return label === 'benign' ? '#4CAF50'
+         : label === 'malignant' ? '#F44336'
+         : '#FF6B00'; // uploaded
+  };
+
+  useEffect(() => {
+    fetch('/holdout_image_index.json')
+      .then((res) => res.json())
+      .then((data) => {
+        setHoldoutImages(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("❌ Failed to load holdout image index:", err);
+        setLoading(false);
+      });
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -46,9 +55,22 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
     }
   };
 
+  const handleDropdownChange = (e) => {
+    const selected = holdoutImages.find(img => img.filename === e.target.value);
+    if (selected) {
+      const withPath = {
+        ...selected,
+        path: selected.url, // assign cloudinary url as .path
+        isUploaded: false,
+      };
+      setUploadedImage(null);
+      onImageSelect(withPath);
+    }
+  };
+
   return (
     <Box sx={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}>
-      <Card sx={{ 
+      <Card sx={{
         background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -60,7 +82,7 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
               Choose or Upload an Image
             </Typography>
           </Box>
-          
+
           <Typography variant="body1" sx={{ mb: 3, color: '#666666' }}>
             Select a histology image from our test set or upload your own image to analyze with our AI model.
           </Typography>
@@ -70,11 +92,7 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
             <Select
               value={selectedImage && !selectedImage.isUploaded ? selectedImage.filename : ''}
               label="Select image"
-              onChange={(e) => {
-                const selected = mockImageOptions.find(img => img.filename === e.target.value);
-                onImageSelect(selected);
-                setUploadedImage(null);
-              }}
+              onChange={handleDropdownChange}
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: '#FF6B00',
@@ -87,25 +105,35 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
                 },
               }}
             >
-              {mockImageOptions.map((image) => (
-                <MenuItem key={image.filename} value={image.filename}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Science sx={{ mr: 2, color: '#FF6B00' }} />
-                      <Typography>{image.filename}</Typography>
-                    </Box>
-                    <Chip 
-                      label={image.actualLabel} 
-                      size="small"
-                      sx={{ 
-                        backgroundColor: getLabelColor(image.actualLabel),
-                        color: 'white',
-                        fontWeight: 600,
-                      }}
-                    />
-                  </Box>
+              {loading ? (
+                <MenuItem disabled>
+                  <CircularProgress size={20} sx={{ mr: 2 }} /> Loading images...
                 </MenuItem>
-              ))}
+              ) : (
+                holdoutImages.map((image) => (
+                  <MenuItem key={image.filename} value={image.filename}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <img
+                          src={image.url}
+                          alt={image.filename}
+                          style={{ width: 24, height: 24, objectFit: 'cover', marginRight: 10, borderRadius: 4 }}
+                        />
+                        <Typography>{image.filename}</Typography>
+                      </Box>
+                      <Chip
+                        label={image.actualLabel}
+                        size="small"
+                        sx={{
+                          backgroundColor: getLabelColor(image.actualLabel),
+                          color: 'white',
+                          fontWeight: 600,
+                        }}
+                      />
+                    </Box>
+                  </MenuItem>
+                ))
+              )}
             </Select>
           </FormControl>
 
@@ -150,36 +178,12 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
           )}
 
           <Box sx={{ mt: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Chip 
-              label="Benign" 
-              size="small" 
-              sx={{ 
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                fontWeight: 600,
-              }}
-            />
-            <Chip 
-              label="Malignant" 
-              size="small" 
-              sx={{ 
-                backgroundColor: '#F44336',
-                color: 'white',
-                fontWeight: 600,
-              }}
-            />
-            <Chip 
-              label="Uploaded" 
-              size="small" 
-              sx={{ 
-                backgroundColor: '#FF6B00',
-                color: 'white',
-                fontWeight: 600,
-              }}
-            />
+            <Chip label="Benign" size="small" sx={{ backgroundColor: '#4CAF50', color: 'white', fontWeight: 600 }} />
+            <Chip label="Malignant" size="small" sx={{ backgroundColor: '#F44336', color: 'white', fontWeight: 600 }} />
+            <Chip label="Uploaded" size="small" sx={{ backgroundColor: '#FF6B00', color: 'white', fontWeight: 600 }} />
           </Box>
         </CardContent>
       </Card>
     </Box>
   );
-} 
+}

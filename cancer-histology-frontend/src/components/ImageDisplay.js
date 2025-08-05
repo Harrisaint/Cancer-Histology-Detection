@@ -8,8 +8,16 @@ import {
   Fade
 } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
+import { useEffect } from 'react';
 
 export default function ImageDisplay({ selectedImage }) {
+  // ✅ Always call hooks unconditionally at the top level
+  useEffect(() => {
+    if (selectedImage) {
+      console.log("🖼️ Displaying image:", selectedImage.path);
+    }
+  }, [selectedImage]);
+
   if (!selectedImage) {
     return null;
   }
@@ -31,7 +39,7 @@ export default function ImageDisplay({ selectedImage }) {
             <CardMedia
               component="img"
               height="400"
-              image={selectedImage.path}
+              image={decodeURIComponent(selectedImage.path)}
               alt={selectedImage.filename}
               sx={{ 
                 objectFit: 'contain', 
@@ -39,8 +47,8 @@ export default function ImageDisplay({ selectedImage }) {
                 borderBottom: '1px solid rgba(0,0,0,0.1)',
               }}
               onError={(e) => {
-                // Fallback to a placeholder if image doesn't exist
-                e.target.src = 'https://via.placeholder.com/400x400?text=Histology+Image&bg=FF6B00&color=FFFFFF';
+                console.error("❌ Failed to load image:", e.target.src);
+                e.target.src = 'https://via.placeholder.com/400x400?text=Image+Unavailable';
               }}
             />
             <Box sx={{ 
@@ -92,4 +100,4 @@ export default function ImageDisplay({ selectedImage }) {
       </Box>
     </Fade>
   );
-} 
+}

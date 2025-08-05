@@ -1,0 +1,252 @@
+[
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-22549AB__40X__SOB_B_A-14-22549AB-40-011.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425038/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-22549AB__40X__SOB_B_A-14-22549AB-40-011.png.png"
+  },
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-22549AB__40X__SOB_B_A-14-22549AB-40-017.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425038/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-22549AB__40X__SOB_B_A-14-22549AB-40-017.png.png"
+  },
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-22549CD__100X__SOB_B_A-14-22549CD-100-002.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425039/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-22549CD__100X__SOB_B_A-14-22549CD-100-002.png.png"
+  },
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-22549CD__100X__SOB_B_A-14-22549CD-100-010.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425040/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-22549CD__100X__SOB_B_A-14-22549CD-100-010.png.png"
+  },
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-22549G__40X__SOB_B_A-14-22549G-40-009.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425041/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-22549G__40X__SOB_B_A-14-22549G-40-009.png.png"
+  },
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-29960CD__100X__SOB_B_A-14-29960CD-100-001.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425041/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-29960CD__100X__SOB_B_A-14-29960CD-100-001.png.png"
+  },
+  {
+    "filename": "SOB__adenosis__SOB_B_A_14-29960CD__400X__SOB_B_A-14-29960CD-400-008.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425042/holdout/benign/holdout/benign/SOB__adenosis__SOB_B_A_14-29960CD__400X__SOB_B_A-14-29960CD-400-008.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-14134E__100X__SOB_B_F-14-14134E-100-013.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425043/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-14134E__100X__SOB_B_F-14-14134E-100-013.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-14134__200X__SOB_B_F-14-14134-200-003.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425044/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-14134__200X__SOB_B_F-14-14134-200-003.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-21998CD__40X__SOB_B_F-14-21998CD-40-035.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425045/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-21998CD__40X__SOB_B_F-14-21998CD-40-035.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-21998EF__400X__SOB_B_F-14-21998EF-400-017.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425046/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-21998EF__400X__SOB_B_F-14-21998EF-400-017.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-21998EF__400X__SOB_B_F-14-21998EF-400-024.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425046/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-21998EF__400X__SOB_B_F-14-21998EF-400-024.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-21998EF__40X__SOB_B_F-14-21998EF-40-008.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425047/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-21998EF__40X__SOB_B_F-14-21998EF-40-008.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-23060AB__100X__SOB_B_F-14-23060AB-100-015.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425048/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-23060AB__100X__SOB_B_F-14-23060AB-100-015.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-23060AB__40X__SOB_B_F-14-23060AB-40-008.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425049/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-23060AB__40X__SOB_B_F-14-23060AB-40-008.png.png"
+  },
+  {
+    "filename": "SOB__fibroadenoma__SOB_B_F_14-23222AB__400X__SOB_B_F-14-23222AB-400-018.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425049/holdout/benign/holdout/benign/SOB__fibroadenoma__SOB_B_F_14-23222AB__400X__SOB_B_F-14-23222AB-400-018.png.png"
+  },
+  {
+    "filename": "SOB__phyllodes_tumor__SOB_B_PT_14-22704__100X__SOB_B_PT-14-22704-100-026.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425050/holdout/benign/holdout/benign/SOB__phyllodes_tumor__SOB_B_PT_14-22704__100X__SOB_B_PT-14-22704-100-026.png.png"
+  },
+  {
+    "filename": "SOB__phyllodes_tumor__SOB_B_PT_14-22704__100X__SOB_B_PT-14-22704-100-036.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425051/holdout/benign/holdout/benign/SOB__phyllodes_tumor__SOB_B_PT_14-22704__100X__SOB_B_PT-14-22704-100-036.png.png"
+  },
+  {
+    "filename": "SOB__phyllodes_tumor__SOB_B_PT_14-22704__40X__SOB_B_PT-14-22704-40-027.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425052/holdout/benign/holdout/benign/SOB__phyllodes_tumor__SOB_B_PT_14-22704__40X__SOB_B_PT-14-22704-40-027.png.png"
+  },
+  {
+    "filename": "SOB__tubular_adenoma__SOB_B_TA_14-16184CD__200X__SOB_B_TA-14-16184CD-200-004.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425053/holdout/benign/holdout/benign/SOB__tubular_adenoma__SOB_B_TA_14-16184CD__200X__SOB_B_TA-14-16184CD-200-004.png.png"
+  },
+  {
+    "filename": "SOB__tubular_adenoma__SOB_B_TA_14-16184__400X__SOB_B_TA-14-16184-400-011.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425054/holdout/benign/holdout/benign/SOB__tubular_adenoma__SOB_B_TA_14-16184__400X__SOB_B_TA-14-16184-400-011.png.png"
+  },
+  {
+    "filename": "SOB__tubular_adenoma__SOB_B_TA_14-16184__400X__SOB_B_TA-14-16184-400-012.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425054/holdout/benign/holdout/benign/SOB__tubular_adenoma__SOB_B_TA_14-16184__400X__SOB_B_TA-14-16184-400-012.png.png"
+  },
+  {
+    "filename": "SOB__tubular_adenoma__SOB_B_TA_14-19854C__100X__SOB_B_TA-14-19854C-100-014.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425055/holdout/benign/holdout/benign/SOB__tubular_adenoma__SOB_B_TA_14-19854C__100X__SOB_B_TA-14-19854C-100-014.png.png"
+  },
+  {
+    "filename": "SOB__tubular_adenoma__SOB_B_TA_14-3411F__100X__SOB_B_TA-14-3411F-100-005.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425056/holdout/benign/holdout/benign/SOB__tubular_adenoma__SOB_B_TA_14-3411F__100X__SOB_B_TA-14-3411F-100-005.png.png"
+  },
+  {
+    "filename": "SOB__tubular_adenoma__SOB_B_TA_14-3411F__40X__SOB_B_TA-14-3411F-40-002.png",
+    "category": "benign",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425057/holdout/benign/holdout/benign/SOB__tubular_adenoma__SOB_B_TA_14-3411F__40X__SOB_B_TA-14-3411F-40-002.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-11031__100X__SOB_M_DC-14-11031-100-015.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425058/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-11031__100X__SOB_M_DC-14-11031-100-015.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-12312__200X__SOB_M_DC-14-12312-200-018.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425058/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-12312__200X__SOB_M_DC-14-12312-200-018.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-13993__400X__SOB_M_DC-14-13993-400-004.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425059/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-13993__400X__SOB_M_DC-14-13993-400-004.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-14015__200X__SOB_M_DC-14-14015-200-022.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425060/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-14015__200X__SOB_M_DC-14-14015-200-022.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-14015__40X__SOB_M_DC-14-14015-40-005.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425061/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-14015__40X__SOB_M_DC-14-14015-40-005.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-14926__200X__SOB_M_DC-14-14926-200-013.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425062/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-14926__200X__SOB_M_DC-14-14926-200-013.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-15572__100X__SOB_M_DC-14-15572-100-013.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425062/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-15572__100X__SOB_M_DC-14-15572-100-013.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-16188__400X__SOB_M_DC-14-16188-400-006.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425063/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-16188__400X__SOB_M_DC-14-16188-400-006.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-16188__40X__SOB_M_DC-14-16188-40-017.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425064/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-16188__40X__SOB_M_DC-14-16188-40-017.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-17614__40X__SOB_M_DC-14-17614-40-003.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425065/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-17614__40X__SOB_M_DC-14-17614-40-003.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-20629__400X__SOB_M_DC-14-20629-400-011.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425066/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-20629__400X__SOB_M_DC-14-20629-400-011.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-20636__200X__SOB_M_DC-14-20636-200-024.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425066/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-20636__200X__SOB_M_DC-14-20636-200-024.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-20636__200X__SOB_M_DC-14-20636-200-026.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425067/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-20636__200X__SOB_M_DC-14-20636-200-026.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-3909__400X__SOB_M_DC-14-3909-400-014.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425068/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-3909__400X__SOB_M_DC-14-3909-400-014.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-4364__100X__SOB_M_DC-14-4364-100-004.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425069/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-4364__100X__SOB_M_DC-14-4364-100-004.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-4364__200X__SOB_M_DC-14-4364-200-025.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425070/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-4364__200X__SOB_M_DC-14-4364-200-025.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-5287__200X__SOB_M_DC-14-5287-200-008.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425070/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-5287__200X__SOB_M_DC-14-5287-200-008.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-5695__100X__SOB_M_DC-14-5695-100-011.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425071/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-5695__100X__SOB_M_DC-14-5695-100-011.png.png"
+  },
+  {
+    "filename": "SOB__ductal_carcinoma__SOB_M_DC_14-5695__200X__SOB_M_DC-14-5695-200-002.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425072/holdout/malignant/holdout/malignant/SOB__ductal_carcinoma__SOB_M_DC_14-5695__200X__SOB_M_DC-14-5695-200-002.png.png"
+  },
+  {
+    "filename": "SOB__lobular_carcinoma__SOB_M_LC_14-12204__100X__SOB_M_LC-14-12204-100-041.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425073/holdout/malignant/holdout/malignant/SOB__lobular_carcinoma__SOB_M_LC_14-12204__100X__SOB_M_LC-14-12204-100-041.png.png"
+  },
+  {
+    "filename": "SOB__lobular_carcinoma__SOB_M_LC_14-15570C__400X__SOB_M_LC-14-15570C-400-022.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425074/holdout/malignant/holdout/malignant/SOB__lobular_carcinoma__SOB_M_LC_14-15570C__400X__SOB_M_LC-14-15570C-400-022.png.png"
+  },
+  {
+    "filename": "SOB__mucinous_carcinoma__SOB_M_MC_14-13418DE__40X__SOB_M_MC-14-13418DE-40-003.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425075/holdout/malignant/holdout/malignant/SOB__mucinous_carcinoma__SOB_M_MC_14-13418DE__40X__SOB_M_MC-14-13418DE-40-003.png.png"
+  },
+  {
+    "filename": "SOB__mucinous_carcinoma__SOB_M_MC_14-16456__400X__SOB_M_MC-14-16456-400-044.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425075/holdout/malignant/holdout/malignant/SOB__mucinous_carcinoma__SOB_M_MC_14-16456__400X__SOB_M_MC-14-16456-400-044.png.png"
+  },
+  {
+    "filename": "SOB__mucinous_carcinoma__SOB_M_MC_14-19979__400X__SOB_M_MC-14-19979-400-009.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425076/holdout/malignant/holdout/malignant/SOB__mucinous_carcinoma__SOB_M_MC_14-19979__400X__SOB_M_MC-14-19979-400-009.png.png"
+  },
+  {
+    "filename": "SOB__papillary_carcinoma__SOB_M_PC_14-15687B__100X__SOB_M_PC-14-15687B-100-003.png",
+    "category": "malignant",
+    "url": "https://res.cloudinary.com/dgopw6xmu/image/upload/v1754425077/holdout/malignant/holdout/malignant/SOB__papillary_carcinoma__SOB_M_PC_14-15687B__100X__SOB_M_PC-14-15687B-100-003.png.png"
+  }
+]

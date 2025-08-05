@@ -1,19 +1,19 @@
-import { 
-  Box, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Alert, 
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Alert,
   LinearProgress,
   Chip,
   Fade,
   Grow,
   CircularProgress
 } from '@mui/material';
-import { 
-  Psychology, 
-  CheckCircle, 
-  Error, 
+import {
+  Psychology,
+  CheckCircle,
+  Error,
   TrendingUp,
   Science
 } from '@mui/icons-material';
@@ -21,12 +21,10 @@ import { useEffect, useState } from 'react';
 
 // Mock prediction function - simulates the model prediction
 const mockPredict = (image) => {
-  // Simulate model prediction with some randomness
-  const isCorrect = Math.random() > 0.3; // 70% chance of correct prediction
-  const actualLabel = image.actualLabel;
+  const isCorrect = Math.random() > 0.3;
+  const actualLabel = image.category || 'uploaded';
   const predictedLabel = isCorrect ? actualLabel : (actualLabel === 'benign' ? 'malignant' : 'benign');
-  const confidence = Math.random() * 0.4 + 0.6; // Confidence between 60-100%
-  
+  const confidence = Math.random() * 0.4 + 0.6;
   return {
     predictedLabel,
     confidence,
@@ -44,12 +42,15 @@ export default function PredictionResult({ selectedImage }) {
     if (!selectedImage) return;
     setResult(null);
     setError('');
-    // If uploaded image, call real API
+
     if (selectedImage.isUploaded && selectedImage.file) {
       setLoading(true);
       const formData = new FormData();
       formData.append('image', selectedImage.file);
-      fetch('/api/predict', {
+
+      console.log("Sending image to backend:", selectedImage.file);
+
+      fetch('http://localhost:8000/api/predict', {
         method: 'POST',
         body: formData,
       })
@@ -58,27 +59,29 @@ export default function PredictionResult({ selectedImage }) {
           return res.json();
         })
         .then(data => {
-          // Expecting { predictedLabel, confidence, actualLabel }
+          console.log("Received prediction:", data);
           setResult({
-            predictedLabel: data.predictedLabel,
+            predictedLabel: data.predictedLabel || null,
             confidence: data.confidence,
-            actualLabel: data.actualLabel || 'uploaded',
-            isCorrect: undefined // Can't know without ground truth
+            actualLabel: data.actualLabel || selectedImage.category || 'uploaded',
+            isCorrect: undefined
           });
           setLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error("Prediction failed:", err);
           setError('Prediction failed. Please try again.');
           setLoading(false);
         });
     } else {
-      // Use mock logic for test set images
       setResult(mockPredict(selectedImage));
     }
   }, [selectedImage]);
 
   const getLabelColor = (label) => {
-    return label === 'benign' ? '#4CAF50' : label === 'malignant' ? '#F44336' : '#FF6B00';
+    return label === 'benign' ? '#4CAF50'
+         : label === 'malignant' ? '#F44336'
+         : '#FF6B00';
   };
 
   const getConfidenceColor = (confidence) => {
@@ -92,7 +95,7 @@ export default function PredictionResult({ selectedImage }) {
   return (
     <Fade in={true} timeout={1000}>
       <Box sx={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -113,9 +116,11 @@ export default function PredictionResult({ selectedImage }) {
                 </Typography>
               </Box>
             )}
+
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
             )}
+
             {result && !loading && !error && (
               <>
                 <Box sx={{ mb: 4 }}>
@@ -123,11 +128,15 @@ export default function PredictionResult({ selectedImage }) {
                     <Typography variant="h6" sx={{ fontWeight: 600, color: '#1A1A1A' }}>
                       Predicted Classification:
                     </Typography>
-                    <Chip 
-                      label={result.predictedLabel?.charAt(0).toUpperCase() + result.predictedLabel?.slice(1)}
+                    <Chip
+                      label={
+                        typeof result.predictedLabel === 'string'
+                          ? result.predictedLabel.charAt(0).toUpperCase() + result.predictedLabel.slice(1)
+                          : 'N/A'
+                      }
                       size="large"
                       icon={<Science />}
-                      sx={{ 
+                      sx={{
                         backgroundColor: getLabelColor(result.predictedLabel),
                         color: 'white',
                         fontWeight: 700,
@@ -136,16 +145,17 @@ export default function PredictionResult({ selectedImage }) {
                       }}
                     />
                   </Box>
+
                   <Box sx={{ mb: 3 }}>
                     <Typography variant="body1" sx={{ mb: 1, fontWeight: 500, color: '#1A1A1A' }}>
                       Model Confidence: {result.confidence ? (result.confidence * 100).toFixed(1) : '--'}%
                     </Typography>
                     <Box sx={{ position: 'relative', mb: 1 }}>
-                      <LinearProgress 
-                        variant="determinate" 
-                        value={result.confidence ? result.confidence * 100 : 0} 
-                        sx={{ 
-                          height: 12, 
+                      <LinearProgress
+                        variant="determinate"
+                        value={result.confidence ? result.confidence * 100 : 0}
+                        sx={{
+                          height: 12,
                           borderRadius: 6,
                           backgroundColor: 'rgba(0,0,0,0.1)',
                           '& .MuiLinearProgress-bar': {
@@ -154,9 +164,9 @@ export default function PredictionResult({ selectedImage }) {
                           }
                         }}
                       />
-                      <Box sx={{ 
-                        position: 'absolute', 
-                        right: 0, 
+                      <Box sx={{
+                        position: 'absolute',
+                        right: 0,
                         top: -20,
                         display: 'flex',
                         alignItems: 'center',
@@ -169,14 +179,19 @@ export default function PredictionResult({ selectedImage }) {
                       </Box>
                     </Box>
                   </Box>
+
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
                     <Typography variant="body1" sx={{ fontWeight: 500, color: '#1A1A1A' }}>
                       Actual Label:
                     </Typography>
-                    <Chip 
-                      label={result.actualLabel?.charAt(0).toUpperCase() + result.actualLabel?.slice(1)}
+                    <Chip
+                      label={
+                        typeof result.actualLabel === 'string'
+                          ? result.actualLabel.charAt(0).toUpperCase() + result.actualLabel.slice(1)
+                          : 'Unknown'
+                      }
                       size="medium"
-                      sx={{ 
+                      sx={{
                         backgroundColor: getLabelColor(result.actualLabel),
                         color: 'white',
                         fontWeight: 600,
@@ -189,10 +204,10 @@ export default function PredictionResult({ selectedImage }) {
                   <Grow in={true} timeout={1500}>
                     <Box>
                       {result.isCorrect ? (
-                        <Alert 
-                          severity="success" 
+                        <Alert
+                          severity="success"
                           icon={<CheckCircle />}
-                          sx={{ 
+                          sx={{
                             borderRadius: 3,
                             backgroundColor: 'rgba(76, 175, 80, 0.1)',
                             border: '1px solid rgba(76, 175, 80, 0.3)',
@@ -206,10 +221,10 @@ export default function PredictionResult({ selectedImage }) {
                           </Typography>
                         </Alert>
                       ) : (
-                        <Alert 
-                          severity="error" 
+                        <Alert
+                          severity="error"
                           icon={<Error />}
-                          sx={{ 
+                          sx={{
                             borderRadius: 3,
                             backgroundColor: 'rgba(244, 67, 54, 0.1)',
                             border: '1px solid rgba(244, 67, 54, 0.3)',
@@ -239,4 +254,4 @@ export default function PredictionResult({ selectedImage }) {
       </Box>
     </Fade>
   );
-} 
+}
