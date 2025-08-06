@@ -9,7 +9,7 @@ env/
 
 # Ignore model logs and checkpoints
 *.h5
-*.keras
+#*.keras
 *.ckpt
 *.log
 
