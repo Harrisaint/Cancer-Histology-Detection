@@ -50,7 +50,7 @@ export default function PredictionResult({ selectedImage }) {
 
       console.log("Sending image to backend:", selectedImage.file);
 
-      fetch('https://histology-backend.onrender.com/api/predict', {
+      fetch('https://histology-backend.onrender.com', {
         method: 'POST',
         body: formData,
       })
