@@ -1,5 +1,7 @@
 # Cancer Histology Detection Platform
 
+## https://cancer-histology-detection.vercel.app/analyze
+
 ## Overview
 A full-stack application for classifying breast cancer histology images as benign or malignant using deep learning. The platform features a modern, playful React frontend and a Python backend (Streamlit or Flask/FastAPI recommended) for real-time image analysis. Target users include medical researchers, students, and developers interested in medical AI and histopathology.
 
