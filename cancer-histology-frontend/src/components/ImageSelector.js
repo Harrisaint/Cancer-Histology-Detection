@@ -23,7 +23,7 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
   const getLabelColor = (label) => {
     return label === 'benign' ? '#4CAF50'
          : label === 'malignant' ? '#F44336'
-         : '#FF6B00'; // uploaded
+         : '#0D47A1'; // uploaded
   };
 
   useEffect(() => {
@@ -69,23 +69,10 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}>
-      <Card sx={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-      }}>
-        <CardContent sx={{ p: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Image sx={{ fontSize: 32, color: '#FF6B00', mr: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 600, color: '#1A1A1A' }}>
-              Choose or Upload an Image
-            </Typography>
-          </Box>
-
-          <Typography variant="body1" sx={{ mb: 3, color: '#666666' }}>
-            Select a histology image from our test set or upload your own image to analyze with our AI model.
-          </Typography>
+    <Box>
+      <Typography variant="body1" sx={{ mb: 2, color: '#666666', textAlign: 'center' }}>
+        Select a histology image from our test set or upload your own image to analyze with our AI model.
+      </Typography>
 
           <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel sx={{ color: '#666666' }}>Select image</InputLabel>
@@ -95,13 +82,13 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
               onChange={handleDropdownChange}
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#FF6B00',
+                  borderColor: '#0D47A1',
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#FF8533',
+                  borderColor: '#1E88E5',
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#FF6B00',
+                  borderColor: '#0D47A1',
                 },
               }}
             >
@@ -137,31 +124,33 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
             </Select>
           </FormControl>
 
-          <Button
-            variant="outlined"
-            startIcon={<UploadFile />}
-            component="label"
-            sx={{
-              borderRadius: 20,
-              borderColor: '#FF6B00',
-              color: '#FF6B00',
-              fontWeight: 600,
-              mb: 2,
-              '&:hover': {
-                backgroundColor: 'rgba(255, 107, 0, 0.08)',
-                borderColor: '#FF8533',
-              },
-            }}
-          >
-            Upload Image
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              ref={fileInput}
-              onChange={handleFileChange}
-            />
-          </Button>
+      <Button
+        variant="outlined"
+        startIcon={<UploadFile />}
+        component="label"
+        fullWidth
+        sx={{
+          borderRadius: 20,
+          borderColor: '#0D47A1',
+          color: '#0D47A1',
+          fontWeight: 600,
+          mb: 2,
+          py: 1.5,
+          '&:hover': {
+            backgroundColor: 'rgba(13, 71, 161, 0.08)',
+            borderColor: '#1976D2',
+          },
+        }}
+      >
+        Upload Image
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          ref={fileInput}
+          onChange={handleFileChange}
+        />
+      </Button>
 
           {uploadedImage && (
             <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -177,13 +166,11 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
             </Box>
           )}
 
-          <Box sx={{ mt: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Chip label="Benign" size="small" sx={{ backgroundColor: '#4CAF50', color: 'white', fontWeight: 600 }} />
-            <Chip label="Malignant" size="small" sx={{ backgroundColor: '#F44336', color: 'white', fontWeight: 600 }} />
-            <Chip label="Uploaded" size="small" sx={{ backgroundColor: '#FF6B00', color: 'white', fontWeight: 600 }} />
-          </Box>
-        </CardContent>
-      </Card>
+      <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <Chip label="Benign" size="small" sx={{ backgroundColor: '#4CAF50', color: 'white', fontWeight: 600 }} />
+        <Chip label="Malignant" size="small" sx={{ backgroundColor: '#F44336', color: 'white', fontWeight: 600 }} />
+        <Chip label="Uploaded" size="small" sx={{ backgroundColor: '#0D47A1', color: 'white', fontWeight: 600 }} />
+      </Box>
     </Box>
   );
 }

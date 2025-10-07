@@ -81,7 +81,7 @@ export default function PredictionResult({ selectedImage }) {
   const getLabelColor = (label) => {
     return label === 'benign' ? '#4CAF50'
          : label === 'malignant' ? '#F44336'
-         : '#FF6B00';
+         : '#1565C0';
   };
 
   const getConfidenceColor = (confidence) => {
@@ -102,7 +102,7 @@ export default function PredictionResult({ selectedImage }) {
         }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Psychology sx={{ fontSize: 32, color: '#FF6B00', mr: 2 }} />
+              <Psychology sx={{ fontSize: 32, color: '#1565C0', mr: 2 }} />
               <Typography variant="h4" sx={{ fontWeight: 600, color: '#1A1A1A' }}>
                 🧠 AI Prediction Results
               </Typography>
@@ -111,7 +111,7 @@ export default function PredictionResult({ selectedImage }) {
             {loading && (
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 6 }}>
                 <CircularProgress color="secondary" size={60} thickness={5} />
-                <Typography variant="h6" sx={{ mt: 2, color: '#FF6B00', fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ mt: 2, color: '#1565C0', fontWeight: 600 }}>
                   Analyzing image...
                 </Typography>
               </Box>
@@ -242,7 +242,7 @@ export default function PredictionResult({ selectedImage }) {
                   </Grow>
                 )}
 
-                <Box sx={{ mt: 3, p: 2, backgroundColor: 'rgba(255, 107, 0, 0.05)', borderRadius: 2 }}>
+                <Box sx={{ mt: 3, p: 2, backgroundColor: 'rgba(21, 101, 192, 0.05)', borderRadius: 2 }}>
                   <Typography variant="body2" sx={{ color: '#666666', fontStyle: 'italic' }}>
                     💡 <strong>Note:</strong> This is a demonstration. Uploaded images are sent to the backend for real prediction. In a real medical setting, AI predictions should always be reviewed by qualified healthcare professionals.
                   </Typography>
