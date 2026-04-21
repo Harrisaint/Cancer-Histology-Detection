@@ -9,10 +9,12 @@ from tensorflow.keras.saving import register_keras_serializable
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 import io
 
-# --- Register Custom Loss: FocalLoss ---
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(backend_dir, ".."))
+
 @register_keras_serializable()
 class FocalLoss(Loss):
-    def __init__(self, gamma=2.0, alpha=0.25, from_logits=False, **kwargs):
+    def __init__(self, gamma=2.0, alpha=0.75, from_logits=False, **kwargs):
         super().__init__(**kwargs)
         self.gamma = gamma
         self.alpha = alpha
@@ -26,36 +28,36 @@ class FocalLoss(Loss):
         epsilon = tf.keras.backend.epsilon()
         y_pred = tf.clip_by_value(y_pred, epsilon, 1. - epsilon)
 
-        cross_entropy = -y_true * tf.math.log(y_pred) - (1 - y_true) * tf.math.log(1 - y_pred)
-        weight = self.alpha * tf.pow(1 - y_pred, self.gamma) * y_true + \
-                 (1 - self.alpha) * tf.pow(y_pred, self.gamma) * (1 - y_true)
-        return tf.reduce_mean(weight * cross_entropy)
+        p_t = y_true * y_pred + (1 - y_true) * (1 - y_pred)
+        alpha_factor = y_true * self.alpha + (1 - y_true) * (1 - self.alpha)
+        modulating_factor = tf.pow((1 - p_t), self.gamma)
 
-# --- Register Custom Metric ---
-@register_keras_serializable()
-def precision_at_recall_fn(y_true, y_pred):
-    metric = Precision()
-    metric.update_state(y_true, y_pred)
-    return metric.result()
+        loss = -alpha_factor * modulating_factor * tf.math.log(p_t)
+        return tf.reduce_mean(loss)
 
-# --- Load Model ---
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "gamma": self.gamma,
+            "alpha": self.alpha,
+            "from_logits": self.from_logits
+        })
+        return config
+
+model_path = os.path.join(backend_dir, "breakhis_mobilenet_improved_model.keras")
 try:
     model = tf.keras.models.load_model(
-        "breakhis_mobilenet_improved_model.keras",
-        custom_objects={
-            "FocalLoss": FocalLoss,
-            "precision_at_recall_fn": precision_at_recall_fn
-        }
+        model_path,
+        custom_objects={"FocalLoss": FocalLoss}
     )
-    print("✅ Model loaded successfully.")
+    print(f"Model loaded from {model_path}")
 except Exception as e:
-    print(f"❌ Failed to load model: {e}")
+    print(f"Failed to load model: {e}")
     model = None
 
-# --- Class Index Mapping ---
 class_names = ["benign", "malignant"]
+holdout_dir = os.path.join(project_root, "holdout_test_set")
 
-# --- FastAPI App ---
 app = FastAPI()
 
 app.add_middleware(
@@ -66,13 +68,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Endpoint: List Holdout Test Images ---
 @app.get("/api/images")
 def list_images():
-    base = "holdout_test_set"
     result = []
-    for cat in os.listdir(base):
-        cat_path = os.path.join(base, cat)
+    for cat in os.listdir(holdout_dir):
+        cat_path = os.path.join(holdout_dir, cat)
         if os.path.isdir(cat_path):
             for file in os.listdir(cat_path):
                 if file.lower().endswith((".png", ".jpg", ".jpeg")):
@@ -82,37 +82,33 @@ def list_images():
                     })
     return result
 
-# --- Endpoint: Predict from Uploaded or Predefined Image ---
 @app.post("/api/predict")
 async def predict(
     image: UploadFile = File(None),
     filename: str = Form(None),
     category: str = Form(None)
 ):
+    if model is None:
+        return {"error": "Model not loaded."}
+
     try:
-        # Handle uploaded image
-        if image:
+        if image and image.filename:
             contents = await image.read()
             pil_image = Image.open(io.BytesIO(contents)).convert("RGB")
             actual_label = "uploaded"
-
-        # Handle test set image
         elif filename and category:
-            image_path = os.path.join("holdout_test_set", category, filename)
+            image_path = os.path.join(holdout_dir, category, filename)
             pil_image = Image.open(image_path).convert("RGB")
             actual_label = category.lower()
-
         else:
             return {"error": "No image provided."}
 
-        # Preprocess image
         pil_image = pil_image.resize((224, 224))
         image_array = np.array(pil_image, dtype=np.float32)
         image_array = preprocess_input(np.expand_dims(image_array, axis=0))
 
-        # Model prediction
         prediction = model.predict(image_array)
-        confidence_score = float(prediction[0][0])  # between 0 and 1
+        confidence_score = float(prediction[0][0])
         predicted_class = int(round(confidence_score))
         predicted_label = class_names[predicted_class]
 
@@ -123,4 +119,4 @@ async def predict(
         }
 
     except Exception as e:
-        return {"error": f"❌ Failed to process image: {str(e)}"}
+        return {"error": f"Failed to process image: {str(e)}"}

@@ -5,13 +5,11 @@ import {
   MenuItem,
   Typography,
   Box,
-  Card,
-  CardContent,
   Chip,
   Button,
   CircularProgress
 } from '@mui/material';
-import { Image, Science, UploadFile } from '@mui/icons-material';
+import { UploadFile } from '@mui/icons-material';
 import { useRef, useState, useEffect } from 'react';
 
 export default function ImageSelector({ selectedImage, onImageSelect }) {
@@ -109,10 +107,10 @@ export default function ImageSelector({ selectedImage, onImageSelect }) {
                         <Typography>{image.filename}</Typography>
                       </Box>
                       <Chip
-                        label={image.actualLabel}
+                        label={image.category}
                         size="small"
                         sx={{
-                          backgroundColor: getLabelColor(image.actualLabel),
+                          backgroundColor: getLabelColor(image.category),
                           color: 'white',
                           fontWeight: 600,
                         }}

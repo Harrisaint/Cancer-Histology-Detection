@@ -4,3 +4,5 @@ pillow
 numpy
 tensorflow==2.19.0
 python-multipart
+scikit-learn
+matplotlib

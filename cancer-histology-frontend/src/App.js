@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Container,
   CssBaseline,
@@ -6,40 +6,34 @@ import {
   createTheme,
   Box,
   useMediaQuery,
-  Typography, 
-  Button, 
-  Grid,
+  Typography,
   Card,
   CardContent,
-  useTheme,
   Chip,
   LinearProgress
 } from '@mui/material';
 import { Global } from '@emotion/react';
 import { motion } from 'framer-motion';
-import { 
-  Science, 
-  Speed, 
+import {
+  Science,
+  Speed,
   Psychology,
-  ArrowDownward,
   CloudUpload,
   AutoAwesome,
   CheckCircle,
   Error
 } from '@mui/icons-material';
 
-// Import components
 import Header from './components/Header';
 import ImageSelector from './components/ImageSelector';
-import ImageDisplay from './components/ImageDisplay';
-import PredictionResult from './components/PredictionResult';
 
-// Import Google Fonts
 import '@fontsource/poppins/300.css';
 import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 const getDesignTokens = () => ({
   palette: {
@@ -60,36 +54,13 @@ const getDesignTokens = () => ({
       main: '#1976D2',
       contrastText: '#fff',
     },
-    accent: {
-      main: '#0D47A1',
-    },
   },
   typography: {
     fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontWeight: 700,
-      fontSize: '3rem',
-      '@media (max-width:600px)': {
-        fontSize: '2rem',
-      },
-    },
     h2: {
       fontWeight: 600,
       fontSize: '2.5rem',
-      '@media (max-width:600px)': {
-        fontSize: '1.8rem',
-      },
-    },
-    h3: {
-      fontWeight: 600,
-      fontSize: '2rem',
-      '@media (max-width:600px)': {
-        fontSize: '1.5rem',
-      },
-    },
-    h4: {
-      fontWeight: 500,
-      fontSize: '1.5rem',
+      '@media (max-width:600px)': { fontSize: '1.8rem' },
     },
     h5: {
       fontWeight: 500,
@@ -112,9 +83,7 @@ const getDesignTokens = () => ({
       textTransform: 'none',
     },
   },
-  shape: {
-    borderRadius: 20,
-  },
+  shape: { borderRadius: 20 },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -157,22 +126,8 @@ const getDesignTokens = () => ({
         },
       },
     },
-    MuiFab: {
-      styleOverrides: {
-        root: {
-          borderRadius: '50%',
-          boxShadow: '0 6px 20px rgba(13, 71, 161, 0.2)',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'scale(1.1)',
-            boxShadow: '0 8px 25px rgba(13, 71, 161, 0.3)',
-          },
-        },
-      },
-    },
   },
 });
-
 
 function App() {
   const theme = useMemo(() => createTheme(getDesignTokens()), []);
@@ -180,48 +135,79 @@ function App() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleImageSelect = (image) => {
+  const handleImageSelect = async (image) => {
     setSelectedImage(image);
     setPrediction(null);
-    
-    // Simulate prediction for demo
-    if (image) {
-      setLoading(true);
-      setTimeout(() => {
-        const isCorrect = Math.random() > 0.3;
-        const actualLabel = image.actualLabel || 'uploaded';
-        const predictedLabel = isCorrect ? actualLabel : (actualLabel === 'benign' ? 'malignant' : 'benign');
-        const confidence = Math.random() * 0.4 + 0.6;
-        
+    setError(null);
+
+    if (!image) return;
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+
+      if (image.isUploaded && image.file) {
+        formData.append('image', image.file);
+      } else {
+        formData.append('filename', image.filename);
+        formData.append('category', image.category);
+      }
+
+      const res = await fetch(`${API_URL}/api/predict`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+      const data = await res.json();
+
+      if (data.error) {
+        setError(data.error);
+      } else {
+        const isCorrect = data.actualLabel !== 'uploaded'
+          ? data.predictedLabel === data.actualLabel
+          : undefined;
+
         setPrediction({
-          predictedLabel,
-          confidence,
-          actualLabel,
-          isCorrect
+          predictedLabel: data.predictedLabel,
+          confidence: data.confidence,
+          actualLabel: data.actualLabel,
+          isCorrect,
         });
-        setLoading(false);
-      }, 2000);
+      }
+    } catch (err) {
+      setError(`Prediction failed: ${err.message}. Make sure the backend is running.`);
+    } finally {
+      setLoading(false);
     }
   };
 
   const features = [
     {
       icon: <Science sx={{ fontSize: 32, color: '#0D47A1' }} />,
-      title: 'AI-Powered Analysis',
-      description: 'Advanced machine learning algorithms'
+      title: 'MobileNetV2 Transfer Learning',
+      description: 'Fine-tuned on the BreaKHis histopathology dataset'
     },
     {
       icon: <Speed sx={{ fontSize: 32, color: '#0D47A1' }} />,
-      title: 'Instant Results',
-      description: 'Get predictions in seconds'
+      title: '0.94 Malignant Recall',
+      description: 'Catches 94% of malignant cases to minimize missed diagnoses'
     },
     {
       icon: <Psychology sx={{ fontSize: 32, color: '#0D47A1' }} />,
-      title: 'Smart Detection',
-      description: 'Precise benign vs malignant classification'
+      title: '0.91 F1 Score',
+      description: 'Strong balance of precision and recall on malignant detection'
     }
   ];
+
+  const getConfidenceDisplay = (confidence, predictedLabel) => {
+    const displayConfidence = predictedLabel === 'malignant' ? confidence : 1 - confidence;
+    return (displayConfidence * 100).toFixed(1);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -235,10 +221,9 @@ function App() {
           fontFamily: "'Poppins', sans-serif",
         }
       }} />
-        <div className="App">
+      <div className="App">
         <Header />
-        
-        {/* Split Screen Layout */}
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -253,21 +238,18 @@ function App() {
               '&::before': {
                 content: '""',
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                top: 0, left: 0, right: 0, bottom: 0,
                 background: 'radial-gradient(circle at 20% 80%, rgba(13, 71, 161, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(25, 118, 210, 0.08) 0%, transparent 50%)',
                 zIndex: 0,
               }
             }}
           >
-            {/* Left Side - Text Section */}
+            {/* Left Side */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ 
+              style={{
                 flex: isMobile ? 'none' : '1',
                 display: 'flex',
                 alignItems: 'center',
@@ -276,7 +258,6 @@ function App() {
             >
               <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
                 <Box sx={{ textAlign: isMobile ? 'center' : 'left' }}>
-                  {/* Logo */}
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -290,7 +271,6 @@ function App() {
                     </Box>
                   </motion.div>
 
-                  {/* Headline */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -307,7 +287,7 @@ function App() {
                       }}
                     >
                       Detect Cancer with
-                      <Box component="span" sx={{ 
+                      <Box component="span" sx={{
                         background: 'linear-gradient(45deg, #0D47A1, #1976D2)',
                         backgroundClip: 'text',
                         WebkitBackgroundClip: 'text',
@@ -318,8 +298,7 @@ function App() {
                       </Box>
                     </Typography>
                   </motion.div>
-                  
-                  {/* Subheadline */}
+
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -327,18 +306,12 @@ function App() {
                   >
                     <Typography
                       variant="h6"
-                      sx={{
-                        mb: 4,
-                        color: '#666666',
-                        fontWeight: 400,
-                        lineHeight: 1.6,
-                      }}
+                      sx={{ mb: 4, color: '#666666', fontWeight: 400, lineHeight: 1.6 }}
                     >
-                      Upload histology images to receive instant benign vs malignant analysis using our deep learning model.
+                      Select holdout test images or upload your own histology images to receive instant benign vs malignant classification.
                     </Typography>
                   </motion.div>
 
-                  {/* Feature Highlights */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -352,20 +325,16 @@ function App() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 1.2 + index * 0.1 }}
                         >
-                          <Box sx={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
+                          <Box sx={{
+                            display: 'flex',
+                            alignItems: 'center',
                             mb: 2,
                             justifyContent: isMobile ? 'center' : 'flex-start'
                           }}>
-                            <Box sx={{ 
-                              mr: 2, 
-                              p: 1, 
-                              borderRadius: '50%', 
+                            <Box sx={{
+                              mr: 2, p: 1, borderRadius: '50%',
                               backgroundColor: 'rgba(13, 71, 161, 0.1)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
+                              display: 'flex', alignItems: 'center', justifyContent: 'center'
                             }}>
                               {feature.icon}
                             </Box>
@@ -382,17 +351,16 @@ function App() {
                       ))}
                     </Box>
                   </motion.div>
-
                 </Box>
               </Container>
             </motion.div>
 
-            {/* Right Side - Functional Section */}
+            {/* Right Side */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              style={{ 
+              style={{
                 flex: isMobile ? 'none' : '1',
                 display: 'flex',
                 alignItems: 'center',
@@ -410,38 +378,29 @@ function App() {
                 >
                   <Card
                     sx={{
-                      mb: 3,
-                      borderRadius: 4,
+                      mb: 3, borderRadius: 4,
                       background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       boxShadow: '0 12px 40px rgba(25, 118, 210, 0.1)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 50px rgba(25, 118, 210, 0.15)',
-                        transform: 'translateY(-2px)',
-                      }
                     }}
                   >
                     <CardContent sx={{ p: 4 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                         <CloudUpload sx={{ fontSize: 28, color: '#0D47A1', mr: 2 }} />
                         <Typography variant="h5" sx={{ fontWeight: 600, color: '#212121' }}>
-                          Upload Image
+                          Analyze Image
                         </Typography>
                       </Box>
 
-                      {/* Image Preview */}
                       {selectedImage && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.4 }}
                         >
-                          <Box sx={{ 
-                            mb: 3, 
-                            borderRadius: 3, 
-                            overflow: 'hidden',
+                          <Box sx={{
+                            mb: 3, borderRadius: 3, overflow: 'hidden',
                             boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
                           }}>
                             <img
@@ -458,14 +417,13 @@ function App() {
                         </motion.div>
                       )}
 
-                      {/* Upload Button */}
                       <ImageSelector selectedImage={selectedImage} onImageSelect={handleImageSelect} />
                     </CardContent>
                   </Card>
                 </motion.div>
 
-                {/* Analysis Output Card */}
-                {(loading || prediction) && (
+                {/* Results Card */}
+                {(loading || prediction || error) && (
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -478,11 +436,6 @@ function App() {
                         backdropFilter: 'blur(10px)',
                         border: '1px solid rgba(255, 255, 255, 0.2)',
                         boxShadow: '0 12px 40px rgba(25, 118, 210, 0.1)',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          boxShadow: '0 16px 50px rgba(25, 118, 210, 0.15)',
-                          transform: 'translateY(-2px)',
-                        }
                       }}
                     >
                       <CardContent sx={{ p: 4 }}>
@@ -495,14 +448,10 @@ function App() {
 
                         {loading && (
                           <Box sx={{ textAlign: 'center', py: 4 }}>
-                            <Box sx={{ 
-                              width: 60, 
-                              height: 60, 
-                              borderRadius: '50%', 
+                            <Box sx={{
+                              width: 60, height: 60, borderRadius: '50%',
                               background: 'linear-gradient(45deg, #0D47A1, #1976D2)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
                               margin: '0 auto 2rem',
                               animation: 'pulse 2s infinite',
                               '@keyframes pulse': {
@@ -516,6 +465,21 @@ function App() {
                             <Typography variant="h6" sx={{ color: '#0D47A1', fontWeight: 600 }}>
                               Analyzing image...
                             </Typography>
+                          </Box>
+                        )}
+
+                        {error && !loading && (
+                          <Box sx={{
+                            p: 2, borderRadius: 2,
+                            backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                            border: '1px solid rgba(244, 67, 54, 0.3)'
+                          }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <Error sx={{ color: '#F44336', mr: 1 }} />
+                              <Typography variant="body2" sx={{ color: '#C62828', fontWeight: 600 }}>
+                                {error}
+                              </Typography>
+                            </Box>
                           </Box>
                         )}
 
@@ -545,27 +509,43 @@ function App() {
 
                             <Box sx={{ mb: 3 }}>
                               <Typography variant="body1" sx={{ mb: 1, fontWeight: 500, color: '#212121' }}>
-                                Confidence: {(prediction.confidence * 100).toFixed(1)}%
+                                Confidence: {getConfidenceDisplay(prediction.confidence, prediction.predictedLabel)}%
                               </Typography>
                               <LinearProgress
                                 variant="determinate"
-                                value={prediction.confidence * 100}
+                                value={parseFloat(getConfidenceDisplay(prediction.confidence, prediction.predictedLabel))}
                                 sx={{
                                   height: 8,
                                   borderRadius: 4,
                                   backgroundColor: 'rgba(13, 71, 161, 0.1)',
                                   '& .MuiLinearProgress-bar': {
-                                    backgroundColor: prediction.confidence >= 0.8 ? '#4CAF50' : prediction.confidence >= 0.6 ? '#FF9800' : '#F44336',
+                                    backgroundColor: parseFloat(getConfidenceDisplay(prediction.confidence, prediction.predictedLabel)) >= 80 ? '#4CAF50' : parseFloat(getConfidenceDisplay(prediction.confidence, prediction.predictedLabel)) >= 60 ? '#FF9800' : '#F44336',
                                     borderRadius: 4,
                                   }
                                 }}
                               />
                             </Box>
 
+                            {prediction.actualLabel && prediction.actualLabel !== 'uploaded' && (
+                              <Box sx={{ mb: 3 }}>
+                                <Typography variant="body1" sx={{ fontWeight: 500, color: '#212121', mb: 1 }}>
+                                  Ground Truth:
+                                </Typography>
+                                <Chip
+                                  label={prediction.actualLabel.charAt(0).toUpperCase() + prediction.actualLabel.slice(1)}
+                                  size="medium"
+                                  sx={{
+                                    backgroundColor: prediction.actualLabel === 'benign' ? '#4CAF50' : '#F44336',
+                                    color: 'white',
+                                    fontWeight: 600,
+                                  }}
+                                />
+                              </Box>
+                            )}
+
                             {prediction.isCorrect !== undefined && (
                               <Box sx={{
-                                p: 2,
-                                borderRadius: 2,
+                                p: 2, borderRadius: 2,
                                 backgroundColor: prediction.isCorrect ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)',
                                 border: `1px solid ${prediction.isCorrect ? 'rgba(76, 175, 80, 0.3)' : 'rgba(244, 67, 54, 0.3)'}`
                               }}>
@@ -575,11 +555,11 @@ function App() {
                                   ) : (
                                     <Error sx={{ color: '#F44336', mr: 1 }} />
                                   )}
-                                  <Typography variant="body2" sx={{ 
+                                  <Typography variant="body2" sx={{
                                     color: prediction.isCorrect ? '#2E7D32' : '#C62828',
-                                    fontWeight: 600 
+                                    fontWeight: 600
                                   }}>
-                                    {prediction.isCorrect ? 'Correct prediction!' : 'Prediction differs from ground truth'}
+                                    {prediction.isCorrect ? 'Correct prediction!' : 'Incorrect prediction — highlights the need for expert review'}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -595,27 +575,26 @@ function App() {
           </Box>
         </motion.div>
 
-        {/* Footer */}
         <motion.footer
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <Box sx={{ 
-            py: 4, 
+          <Box sx={{
+            py: 4,
             backgroundColor: '#0D47A1',
             color: 'white',
             textAlign: 'center'
           }}>
             <Container maxWidth="lg">
               <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                © 2024 Cancer Histology Detection. Powered by AI for medical research and education.
+                Cancer Histology Detection — AI-powered research and education tool
               </Typography>
             </Container>
           </Box>
         </motion.footer>
-        </div>
+      </div>
     </ThemeProvider>
   );
 }
