@@ -1,5 +1,7 @@
 # Cancer Histology Detection
 
+**Live Demo**: https://cancer-histology-detection.vercel.app/
+
 A full-stack deep learning application that classifies breast cancer histopathology images as **benign** or **malignant**. Built with a MobileNetV2 transfer learning model trained on the BreaKHis dataset, a FastAPI backend for inference, and a React frontend for interactive analysis.
 
 ---
