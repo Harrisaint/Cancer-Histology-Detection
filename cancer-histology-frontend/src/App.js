@@ -21,7 +21,8 @@ import {
   CloudUpload,
   AutoAwesome,
   CheckCircle,
-  Error
+  Error,
+  Assessment
 } from '@mui/icons-material';
 
 import Header from './components/Header';
@@ -572,6 +573,69 @@ function App() {
                 )}
               </Container>
             </motion.div>
+          </Box>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <Box sx={{ py: 8, backgroundColor: 'rgba(227, 242, 253, 0.4)' }}>
+            <Container maxWidth="lg">
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
+                <Assessment sx={{ fontSize: 36, color: '#0D47A1', mr: 2 }} />
+                <Typography variant="h2" sx={{ fontWeight: 700, color: '#212121', fontSize: { xs: '1.8rem', md: '2.5rem' } }}>
+                  Model Performance
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ textAlign: 'center', color: '#666666', mb: 5, maxWidth: 600, mx: 'auto' }}>
+                Training metrics and prediction probability distribution from the MobileNetV2 model trained on the BreaKHis dataset.
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 4 }}>
+                <Card sx={{
+                  flex: 1, borderRadius: 4,
+                  background: 'rgba(255,255,255,0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  boxShadow: '0 12px 40px rgba(25,118,210,0.1)',
+                }}>
+                  <CardContent sx={{ p: 3 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#212121', mb: 2, textAlign: 'center' }}>
+                      Training History
+                    </Typography>
+                    <Box sx={{ borderRadius: 2, overflow: 'hidden' }}>
+                      <img
+                        src={`${API_URL}/api/plots/training_history.png`}
+                        alt="Training history showing loss, accuracy, AUC, and recall over epochs"
+                        style={{ width: '100%', display: 'block' }}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+                <Card sx={{
+                  flex: 1, borderRadius: 4,
+                  background: 'rgba(255,255,255,0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  boxShadow: '0 12px 40px rgba(25,118,210,0.1)',
+                }}>
+                  <CardContent sx={{ p: 3 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#212121', mb: 2, textAlign: 'center' }}>
+                      Probability Distribution
+                    </Typography>
+                    <Box sx={{ borderRadius: 2, overflow: 'hidden' }}>
+                      <img
+                        src={`${API_URL}/api/plots/probability_distribution.png`}
+                        alt="Predicted probability distribution for benign and malignant samples"
+                        style={{ width: '100%', display: 'block' }}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Container>
           </Box>
         </motion.div>
 

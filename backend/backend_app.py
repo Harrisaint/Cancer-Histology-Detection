@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from PIL import Image
@@ -120,3 +121,13 @@ async def predict(
 
     except Exception as e:
         return {"error": f"Failed to process image: {str(e)}"}
+
+@app.get("/api/plots/{plot_name}")
+def get_plot(plot_name: str):
+    allowed = {"training_history.png", "probability_distribution.png"}
+    if plot_name not in allowed:
+        return {"error": "Plot not found."}
+    plot_path = os.path.join(backend_dir, plot_name)
+    if not os.path.exists(plot_path):
+        return {"error": f"{plot_name} not found on disk."}
+    return FileResponse(plot_path, media_type="image/png")
