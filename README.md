@@ -1,169 +1,175 @@
-# Cancer Histology Detection Platform
+# Cancer Histology Detection
 
-## https://cancer-histology-detection.vercel.app/analyze
-
-## Overview
-A full-stack application for classifying breast cancer histology images as benign or malignant using deep learning. The platform features a modern, playful React frontend and a Python backend (Streamlit or Flask/FastAPI recommended) for real-time image analysis. Target users include medical researchers, students, and developers interested in medical AI and histopathology.
+A full-stack deep learning application that classifies breast cancer histopathology images as **benign** or **malignant**. Built with a MobileNetV2 transfer learning model trained on the BreaKHis dataset, a FastAPI backend for inference, and a React frontend for interactive analysis.
 
 ---
 
-## Table of Contents
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Features](#features)
-- [Architecture Overview](#architecture-overview)
-- [Getting Started (Local Setup)](#getting-started-local-setup)
-- [Available Scripts/Commands](#available-scriptscommands)
-- [API Overview](#api-overview)
-- [Database Setup](#database-setup)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [Known Issues or TODOs](#known-issues-or-todos)
-- [License](#license)
-- [Acknowledgments / Credits](#acknowledgments--credits)
+## Model Performance
+
+Evaluated on a held-out validation set with an F1-optimized threshold of 0.55:
+
+| Metric | Benign | Malignant |
+|---|---|---|
+| Precision | 0.83 | 0.87 |
+| Recall | 0.66 | **0.94** |
+| F1 Score | 0.73 | **0.91** |
+
+- **Overall Accuracy**: 86%
+- **Validation AUC**: 0.935
+- **Malignant Recall**: 94% — catches the vast majority of cancerous samples
+- **Weighted F1**: 0.86
 
 ---
 
 ## Tech Stack
-- **Frontend:** React 19, Material UI v5, Emotion, Poppins font
-- **Backend:** Python (Streamlit for demo, Flask/FastAPI for API integration)
-- **Dev Tools:** Vite, ESLint, Prettier, Docker (optional)
-- **Database:** None required for basic image classification (add if extending for user/data storage)
+
+- **Model**: TensorFlow/Keras 2.19, MobileNetV2 (ImageNet pretrained), scikit-learn
+- **Backend**: FastAPI, Uvicorn, Pillow, NumPy, Matplotlib
+- **Frontend**: React 19, Material UI v5, Framer Motion, Emotion
+- **Dataset**: [BreaKHis](https://www.kaggle.com/datasets/ambarish/breakhis) — Breast Cancer Histopathological Database
 
 ---
 
 ## Features
-- **Home Screen:** Modern hero section, project overview, and call to action
-- **Image Analysis:**
-  - Upload your own histology image or select a sample
-  - Real-time prediction via backend API
-  - Displays predicted label, confidence, and (for samples) mock results
-- **Dark/Light Mode:** Toggle for accessibility and style
-- **About Page:** Project info and disclaimers
-- **Responsive Design:** Works on desktop and mobile
+
+- Upload your own histology image or select from the holdout test set
+- Real-time benign/malignant classification via the trained model
+- Confidence score display with ground truth comparison for holdout images
+- Training history and probability distribution charts on the app page
+- Responsive design for desktop and mobile
 
 ---
 
-## Architecture Overview
-- **Frontend:**
-  - React app (in `cancer-histology-frontend/`)
-  - Handles UI, image upload, and API requests
-- **Backend:**
-  - Python app (Streamlit for demo, or Flask/FastAPI for `/api/predict` endpoint)
-  - Receives image uploads, runs model inference, returns JSON
-- **Interaction:**
-  - Frontend POSTs image to `/api/predict`
-  - Backend returns `{ predictedLabel, confidence, actualLabel (optional) }`
+## Architecture
 
-**Folder Structure:**
 ```
 Cancer-Histology-Detection/
-  backend/           # Python backend (model, API, Streamlit)
-  cancer-histology-frontend/  # React frontend
-  holdout_test_set/  # (optional) Sample images for testing
-  README.md          # This file
+├── backend/
+│   ├── backend_app.py              # FastAPI server (inference + image API)
+│   ├── app.py                      # Streamlit demo (alternative frontend)
+│   ├── train.py                    # Full training pipeline
+│   ├── breakhis_mobilenet_improved_model.keras  # Trained model
+│   ├── optimal_threshold.txt       # F1-optimized threshold (0.55)
+│   ├── training_history.png        # Loss/accuracy/AUC/recall curves
+│   ├── probability_distribution.png # Prediction distributions by class
+│   ├── requirements.txt            # Python dependencies
+│   └── runtime.txt                 # Python version for deployment
+├── cancer-histology-frontend/      # React frontend
+│   ├── src/
+│   │   ├── App.js                  # Main app with prediction UI + charts
+│   │   └── components/
+│   │       ├── Header.js
+│   │       └── ImageSelector.js    # Image upload + holdout selector
+│   └── public/
+├── extract_holdout_set.py          # Script to create holdout test set
+├── holdout_test_set/               # Held-out images (benign/ + malignant/)
+├── .gitignore
+└── README.md
 ```
+
+**Flow**: Frontend sends image to `POST /api/predict` → FastAPI preprocesses with MobileNetV2's `preprocess_input` → model outputs probability → threshold applied → result returned as JSON.
 
 ---
 
-## Getting Started (Local Setup)
+## Getting Started
 
 ### Prerequisites
-- Node.js v18+
-- Python 3.8+
-- (Optional) Docker
+- Python 3.11+
+- Node.js 18+
 
-### Backend Setup
-1. Install Python dependencies (see backend/README or requirements.txt)
-2. (If using Flask/FastAPI) Set up `/api/predict` endpoint to accept image uploads and return predictions
-3. (If using Streamlit) Run `streamlit run backend/app.py` for demo UI
+### Backend
 
-### Frontend Setup
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn backend_app:app --reload
+```
+
+The API will be available at `http://localhost:8000`.
+
+### Frontend
+
 ```bash
 cd cancer-histology-frontend
 npm install
 npm start
 ```
 
-### Environment Variables
-- For backend API, set any required model or path variables in `.env` (see backend docs)
-- For frontend, no .env needed unless proxying or customizing API URL
+Opens at `http://localhost:3000`. Set `REACT_APP_API_URL` to point to a different backend if needed.
+
+### Training (optional)
+
+To retrain the model from scratch:
+
+1. Download the [BreaKHis dataset](https://www.kaggle.com/datasets/ambarish/breakhis) and place it in `BreaKHis_v1/` at the project root with `benign/` and `malignant/` subdirectories containing images directly (no nested subtype folders).
+2. Run the holdout extraction script:
+   ```bash
+   python extract_holdout_set.py
+   ```
+3. Run training:
+   ```bash
+   cd backend
+   python train.py
+   ```
+
+Training outputs the model (`.keras`), optimal threshold (`.txt`), and performance plots (`.png`) to the `backend/` directory.
 
 ---
 
-## Available Scripts/Commands
+## API Endpoints
 
-### Frontend
-- `npm start` — Start React dev server
-- `npm run build` — Build for production
-- `npm run lint` — Lint code
-- `npm run format` — Format code
+### `POST /api/predict`
+Classify a histology image.
 
-### Backend (example for Flask/FastAPI)
-- `python app.py` or `uvicorn app:app --reload` — Start backend API
-- `streamlit run app.py` — Start Streamlit demo
+**Input** (multipart form):
+- `image` (file) — uploaded image, OR
+- `filename` + `category` (strings) — to select from the holdout set
 
----
+**Response**:
+```json
+{
+  "predictedLabel": "malignant",
+  "confidence": 0.87,
+  "actualLabel": "malignant"
+}
+```
 
-## API Overview
+### `GET /api/images`
+List all images in the holdout test set.
 
-### **POST /api/predict**
-- **Description:** Predicts label for uploaded histology image
-- **Input:** FormData with `image` field (file)
-- **Output:**
-  ```json
-  {
-    "predictedLabel": "benign" | "malignant",
-    "confidence": 0.92,
-    "actualLabel": "benign" // optional
-  }
-  ```
+**Response**: Array of `{ "filename": "...", "category": "benign" | "malignant" }`
+
+### `GET /api/plots/{plot_name}`
+Serve training plots. Allowed values: `training_history.png`, `probability_distribution.png`.
 
 ---
 
-## Database Setup
-- **No database required** for basic image classification.
-- If extending for user management or data storage, add PostgreSQL/MySQL and document migrations here.
+## Training Details
 
----
-
-## Testing
-- **Frontend:** Add tests with Jest/React Testing Library as needed
-- **Backend:** Add tests with Pytest or unittest for API/model
-- No tests included by default
+- **Architecture**: MobileNetV2 base (ImageNet weights) + GlobalAveragePooling → Dense(128) → Dropout(0.5) → Dense(1, sigmoid)
+- **Two-phase training**: Frozen base for 10 epochs, then fine-tune top layers at 1e-5 learning rate
+- **Loss**: Focal Loss (alpha=0.75, gamma=2.0) to handle class imbalance
+- **Class weights**: 1.5x boost for malignant class
+- **Augmentation**: Horizontal + vertical flips, random rotation, zoom, contrast, brightness
+- **Callbacks**: EarlyStopping, ReduceLROnPlateau, ModelCheckpoint (monitoring val_recall)
+- **Threshold optimization**: Grid search over [0.1, 0.9] to maximize F1 score
 
 ---
 
 ## Deployment
-- **Frontend:** Deploy to Vercel, Netlify, or similar static hosting
-- **Backend:** Deploy to Heroku, AWS, GCP, or similar (ensure `/api/predict` is accessible)
-- **Docker:** Add Dockerfiles for containerized deployment if needed
 
----
-
-## Contributing
-- Fork the repo and create a feature branch (`feature/your-feature`)
-- Run `npm run lint` and `npm run format` before PRs
-- Submit PRs to `main` with clear descriptions
-- For questions, open an issue or contact the maintainer
-
----
-
-## Known Issues or TODOs
-- No authentication or user management
-- No persistent database (unless extended)
-- Model file and large datasets not included in repo
-- Add more tests and error handling
+- **Backend**: Deployed on [Render](https://render.com) as a web service
+- **Frontend**: Deployed on [Vercel](https://vercel.com)
 
 ---
 
 ## License
+
 MIT License
 
 ---
 
-## Acknowledgments / Credits
-- [BreaKHis Dataset](https://www.kaggle.com/datasets/ambarish/breakhis)
-- Streamlit, TensorFlow, Keras, React, Material UI, and open-source contributors
-- Inspired by medical AI research and the open-source community
+## Acknowledgments
+
+- [BreaKHis Dataset](https://www.kaggle.com/datasets/ambarish/breakhis) — Spanhol et al.
+- TensorFlow, Keras, FastAPI, React, Material UI, and the open-source community
