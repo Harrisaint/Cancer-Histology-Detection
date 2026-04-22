@@ -19,6 +19,11 @@ env/
 
 # Optional: Ignore large generated plots
 *.png
+# But track the training plots in backend and frontend
+!backend/training_history.png
+!backend/probability_distribution.png
+!cancer-histology-frontend/public/training_history.png
+!cancer-histology-frontend/public/probability_distribution.png
 
 # Node.js
 node_modules/

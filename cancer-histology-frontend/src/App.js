@@ -607,7 +607,7 @@ function App() {
                     </Typography>
                     <Box sx={{ borderRadius: 2, overflow: 'hidden' }}>
                       <img
-                        src={`${API_URL}/api/plots/training_history.png`}
+                        src={`${process.env.PUBLIC_URL}/training_history.png`}
                         alt="Training history showing loss, accuracy, AUC, and recall over epochs"
                         style={{ width: '100%', display: 'block' }}
                       />
@@ -627,7 +627,7 @@ function App() {
                     </Typography>
                     <Box sx={{ borderRadius: 2, overflow: 'hidden' }}>
                       <img
-                        src={`${API_URL}/api/plots/probability_distribution.png`}
+                        src={`${process.env.PUBLIC_URL}/probability_distribution.png`}
                         alt="Predicted probability distribution for benign and malignant samples"
                         style={{ width: '100%', display: 'block' }}
                       />
