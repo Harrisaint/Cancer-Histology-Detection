@@ -45,13 +45,16 @@ class FocalLoss(Loss):
         })
         return config
 
-_orig_bn_init = tf.keras.layers.BatchNormalization.__init__
-def _patched_bn_init(self, *args, **kwargs):
-    kwargs.pop('renorm', None)
-    kwargs.pop('renorm_clipping', None)
-    kwargs.pop('renorm_momentum', None)
-    _orig_bn_init(self, *args, **kwargs)
-tf.keras.layers.BatchNormalization.__init__ = _patched_bn_init
+_STRIP_KWARGS = {'renorm', 'renorm_clipping', 'renorm_momentum', 'quantization_config'}
+def _make_patched_init(orig_init):
+    def _patched(self, *args, **kwargs):
+        for k in _STRIP_KWARGS:
+            kwargs.pop(k, None)
+        orig_init(self, *args, **kwargs)
+    return _patched
+for _cls in [tf.keras.layers.Dense, tf.keras.layers.Conv2D,
+             tf.keras.layers.DepthwiseConv2D, tf.keras.layers.BatchNormalization]:
+    _cls.__init__ = _make_patched_init(_cls.__init__)
 
 model_path = os.path.join(backend_dir, "breakhis_mobilenet_improved_model.keras")
 try:
