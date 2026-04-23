@@ -45,11 +45,20 @@ class FocalLoss(Loss):
         })
         return config
 
+_orig_bn_init = tf.keras.layers.BatchNormalization.__init__
+def _patched_bn_init(self, *args, **kwargs):
+    kwargs.pop('renorm', None)
+    kwargs.pop('renorm_clipping', None)
+    kwargs.pop('renorm_momentum', None)
+    _orig_bn_init(self, *args, **kwargs)
+tf.keras.layers.BatchNormalization.__init__ = _patched_bn_init
+
 model_path = os.path.join(backend_dir, "breakhis_mobilenet_improved_model.keras")
 try:
     model = tf.keras.models.load_model(
         model_path,
-        custom_objects={"FocalLoss": FocalLoss}
+        custom_objects={"FocalLoss": FocalLoss},
+        compile=False
     )
     print(f"Model loaded from {model_path}")
 except Exception as e:
