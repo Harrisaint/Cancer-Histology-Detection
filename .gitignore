@@ -24,6 +24,7 @@ env/
 !backend/probability_distribution.png
 !cancer-histology-frontend/public/training_history.png
 !cancer-histology-frontend/public/probability_distribution.png
+!holdout_test_set/**
 
 # Node.js
 node_modules/
