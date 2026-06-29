@@ -13,6 +13,9 @@ env/
 *.ckpt
 *.log
 
+# Runtime monitoring database (created at startup, ephemeral on Render)
+monitoring.db
+
 # Ignore system & editor files
 .DS_Store
 .vscode/
